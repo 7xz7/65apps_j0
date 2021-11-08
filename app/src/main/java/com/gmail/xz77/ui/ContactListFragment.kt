@@ -1,23 +1,27 @@
-package com.gmail.xz77
+package com.gmail.xz77.ui
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.gmail.xz77.*
 import com.gmail.xz77.databinding.FragmentContactListBinding
+import java.lang.ref.WeakReference
 
 
 class ContactListFragment : Fragment() {
     private var _binding: FragmentContactListBinding? = null
     private val binding: FragmentContactListBinding get() = _binding!!
-    private var contactInterface:ContactInterface? = null
+    private var contactInterface: ContactInterface? = null
+    private var service: ContactService? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         contactInterface = context as? ContactInterface
+        service = (context as? IContactService)?.getService()
     }
 
     override fun onCreateView(
@@ -26,8 +30,7 @@ class ContactListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentContactListBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
 
@@ -37,16 +40,29 @@ class ContactListFragment : Fragment() {
         (activity as AppCompatActivity?)
             ?.supportActionBar
             ?.setTitle(R.string.title_contact_list)
-        binding.contactList.setOnClickListener { contactInterface?.onContactDetailRequested("1") }
+
+        service?.getContacts(WeakReference(this))
+        binding.contactList.setOnClickListener { contactInterface?.onContactDetailRequested("0") }
+    }
+
+    fun setContactData(data: List<ContactModel>) {
+        requireActivity().runOnUiThread {
+            binding.contactList.apply {
+                binding.contactName.text = data.first().contactName
+                binding.contactPhone1.text = data.first().firstPhoneNumber
+                binding.contactPhoto.setImageResource(data.first().photoResId)
+            }
+        }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onDetach() {
         contactInterface = null
+        service = null
         super.onDetach()
     }
 

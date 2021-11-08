@@ -2,11 +2,5 @@
     <string name="app_name">65apps_j0</string>
     <string name="title_contact_details">Детали контакта</string>
     <string name="title_contact_list">Список контактов</string>
-    <string name="phone_number_1">Номер телефона 1</string>
-    <string name="phone_number_2">Номер телефона 2</string>
-    <string name="email_1">Email 1</string>
-    <string name="email_2">Email 2</string>
-    <string name="contact_name">Имя контакта</string>
     <string name="contact_photo_description">Contact Photo</string>
-    <string name="contact_description">Описание контакта</string>
 </resources>
